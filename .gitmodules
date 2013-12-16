@@ -4,3 +4,6 @@
 [submodule "sudo"]
 	path = sudo
 	url = git@github.com:opscode-cookbooks/sudo.git
+[submodule "imagemagick"]
+	path = imagemagick
+	url = git@github.com:opscode-cookbooks/imagemagick.git
