@@ -8,3 +8,10 @@ end
     action :install
   end
 end
+
+template "/etc/init.d/rails" do
+  source "rails.erb"
+  mode 111
+  owner "vagrant"
+  group "admin"
+end
