@@ -11,7 +11,7 @@ end
 
 template "/etc/init.d/rails" do
   source "rails.erb"
-  mode 111
+  mode 0755
   owner "vagrant"
   group "admin"
 end
