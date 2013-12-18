@@ -8,30 +8,35 @@ start() {
     exit 0
   fi
 
-  if [ -e /vagrant/config/database.yml ]
+  if [ ! -e /vagrant/config/database.yml ]
   then
-    ENV=${RAILS_ENV:-development}
-    if [ -e /vagrant/tmp/pids/server.pid ]
-    then 
-      echo "Rails already running"
-    else
-      echo "Starting rails"
-      sudo su - vagrant -c "cd /vagrant && rails server -d -e $ENV"
-    fi
-
-    if [ -e /vagrant/tmp/pids/thin.pid ]
-    then
-      echo "Thin already running"
-    else
-      sudo su - vagrant -c "cd /vagrant && rackup private_pub.ru -D -P tmp/pids/thin.pid -s thin -E $ENV -p 9290"
-    fi
-  else 
     echo "Cannot find /vagrant/config/database.yml. Did you forget to run 'cp /vagrant/config/database.yml.example /vagrant/config/database.yml'?";
+    exit 0
   fi
+
+  ENV=${RAILS_ENV:-development}
+
+  if [ -e /vagrant/tmp/pids/server.pid ]
+  then
+    echo "Rails already running"
+  else
+    echo "Starting rails"
+    sudo su - vagrant -c "cd /vagrant && rails server -d -e $ENV"
+  fi
+
+  if [ -e /vagrant/tmp/pids/thin.pid ]
+  then
+    echo "Thin already running"
+  else
+    sudo su - vagrant -c "cd /vagrant && rackup private_pub.ru -D -P tmp/pids/thin.pid -s thin -E $ENV -p 9290"
+  fi
+
 }
 
 stop() {
+
   echo "Stopping rails"
+
   if [ -e /vagrant/tmp/pids/server.pid ]
   then 
     sudo su - vagrant -c "cd /vagrant && sudo kill `cat /vagrant/tmp/pids/server.pid`"
